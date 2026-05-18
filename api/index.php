@@ -91,6 +91,8 @@ $sa_asul = '';
 $sa_pula = '';
 $result_style = '';
 $outcome = '';
+$final_name = '';
+$final_score = 0;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['choice'])) {
     $sa_asul = $_POST['choice'];
@@ -154,6 +156,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['choice'])) {
         $_SESSION['player_score']++;
         save_player_score($pdo, $scores_file, $_SESSION['player_name'], $_SESSION['player_score']);
     } elseif ($result_style === 'lose') {
+        $final_name = $_SESSION['player_name'];
+        $final_score = $_SESSION['player_score'];
         session_unset();
         session_destroy();
     }
@@ -412,6 +416,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['choice'])) {
             </div>
             <h2><?= $result ?></h2>
             <p class="outcome"><?= $outcome ?></p>
+            <?php if ($result_style === 'lose' && $final_name): ?>
+                <div style="margin-top: 15px; border-top: 2px dashed white; padding-top: 15px; width: 100%;">
+                    <h3 style="color: yellow; margin: 0 0 10px 0;">Game Over, <?= htmlspecialchars($final_name) ?>!</h3>
+                    <p style="margin: 0; font-size: 18px;">Final Score: <strong><?= $final_score ?></strong></p>
+                </div>
+            <?php endif; ?>
         </div>
         
         <?php if (!isset($_SESSION['player_name'])): ?>
