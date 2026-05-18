@@ -1,0 +1,7 @@
+{
+  "name": "rock-paper-scissors",
+  "description": "Rock Paper Scissors Game",
+  "require": {
+    "php": "^7.4"
+  }
+}

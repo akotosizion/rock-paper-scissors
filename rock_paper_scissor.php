@@ -44,9 +44,7 @@ if (isset($_POST['end_game'])) {
             height: 700px;
             font-family: "Silkscreen", sans-serif;
             text-align: center;
-            color
-            
-            : white;
+            color: white;
             text-shadow: 1px 1px 2px black;
         }
 
