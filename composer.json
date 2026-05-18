@@ -1,5 +1,5 @@
 {
-  "name": "rock-paper-scissors",
+  "name": "akotosizion/rock-paper-scissors",
   "description": "Rock Paper Scissors Game",
   "require": {
     "php": "^7.4"
