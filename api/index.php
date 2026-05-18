@@ -399,8 +399,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['choice'])) {
         <form method="POST">
             <button type="submit" name="end_game" class="end-btn">End Game</button>
         </form>
-
-
+    <?php endif; ?>
 
     <?php if ($result): ?>
         <div class="result <?php echo $result_style; ?>">
@@ -429,7 +428,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['choice'])) {
         <?php else: ?>
             <button class="reset-btn" onclick="window.location.href=window.location.href">Next</button>
         <?php endif; ?>
-    <?php endif; ?>
     <?php endif; ?>
 </body>
 </html>
