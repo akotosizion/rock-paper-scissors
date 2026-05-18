@@ -76,6 +76,77 @@ if (isset($_POST['end_game'])) {
     header("Location: " . $_SERVER['PHP_SELF']);
     exit;
 }
+
+$choices = ['rock', 'paper', 'scissor'];
+$result = '';
+$sa_asul = '';
+$sa_pula = '';
+$result_style = '';
+$outcome = '';
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['choice'])) {
+    $sa_asul = $_POST['choice'];
+    $sa_pula = $choices[array_rand($choices)];
+
+    $laban = "{$sa_asul}_{$sa_pula}";
+
+    switch ($laban) {
+        case 'rock_rock':
+        case 'paper_paper':
+        case 'scissor_scissor':
+            $result = "It's a tie!";
+            $outcome = "Both chose $sa_asul";
+            $result_style = 'tie';
+            break;
+
+        case 'rock_scissor':
+            $result = "You win!";
+            $outcome = "Rock crushes scissors";
+            $result_style = 'win';
+            break;
+            
+        case 'scissor_rock':
+            $result = "You lose!";
+            $outcome = "Rock crushes scissors";
+            $result_style = 'lose';
+            break;
+
+        case 'paper_rock':
+            $result = "You win!";
+            $outcome = "Paper covers rock";
+            $result_style = 'win';
+            break;
+            
+        case 'rock_paper':
+            $result = "You lose!";
+            $outcome = "Paper covers rock";
+            $result_style = 'lose';
+            break;
+
+        case 'scissor_paper':
+            $result = "You win!";
+            $outcome = "Scissors cut paper";
+            $result_style = 'win';
+            break;
+            
+        case 'paper_scissor':
+            $result = "You lose!";
+            $outcome = "Scissors cut paper";
+            $result_style = 'lose';
+            break;
+
+        default:
+            $result = "Unexpected result.";
+            $outcome = "Try again";
+            $result_style = 'tie';
+            break;
+    }
+
+    if ($result_style === 'win' && isset($_SESSION['player_name'])) {
+        $_SESSION['player_score']++;
+        save_player_score($pdo, $scores_file, $_SESSION['player_name'], $_SESSION['player_score']);
+    }
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -307,78 +378,7 @@ if (isset($_POST['end_game'])) {
             <button type="submit" name="end_game" class="end-btn">End Game</button>
         </form>
 
-    <?php
-    $choices = ['rock', 'paper', 'scissor'];
-    $result = '';
-    $sa_asul = '';
-    $sa_pula = '';
-    $result_style = '';
-    $outcome = '';
 
-    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['choice'])) {
-        $sa_asul = $_POST['choice'];
-        $sa_pula = $choices[array_rand($choices)];
-
-        $laban = "{$sa_asul}_{$sa_pula}";
-
-        switch ($laban) {
-            case 'rock_rock':
-            case 'paper_paper':
-            case 'scissor_scissor':
-                $result = "It's a tie!";
-                $outcome = "Both chose $sa_asul";
-                $result_style = 'tie';
-                break;
-
-            case 'rock_scissor':
-                $result = "You win!";
-                $outcome = "Rock crushes scissors";
-                $result_style = 'win';
-                break;
-                
-            case 'scissor_rock':
-                $result = "You lose!";
-                $outcome = "Rock crushes scissors";
-                $result_style = 'lose';
-                break;
-
-            case 'paper_rock':
-                $result = "You win!";
-                $outcome = "Paper covers rock";
-                $result_style = 'win';
-                break;
-                
-            case 'rock_paper':
-                $result = "You lose!";
-                $outcome = "Paper covers rock";
-                $result_style = 'lose';
-                break;
-
-            case 'scissor_paper':
-                $result = "You win!";
-                $outcome = "Scissors cut paper";
-                $result_style = 'win';
-                break;
-                
-            case 'paper_scissor':
-                $result = "You lose!";
-                $outcome = "Scissors cut paper";
-                $result_style = 'lose';
-                break;
-
-            default:
-                $result = "Unexpected result.";
-                $outcome = "Try again";
-                $result_style = 'tie';
-                break;
-        }
-
-        if ($result_style === 'win' && isset($_SESSION['player_name'])) {
-            $_SESSION['player_score']++;
-            save_player_score($pdo, $scores_file, $_SESSION['player_name'], $_SESSION['player_score']);
-        }
-    }
-    ?>
 
     <?php if ($result): ?>
         <div class="result <?php echo $result_style; ?>">
