@@ -153,6 +153,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['choice'])) {
     if ($result_style === 'win' && isset($_SESSION['player_name'])) {
         $_SESSION['player_score']++;
         save_player_score($pdo, $scores_file, $_SESSION['player_name'], $_SESSION['player_score']);
+    } elseif ($result_style === 'lose') {
+        session_unset();
+        session_destroy();
     }
 }
 ?>
@@ -411,7 +414,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['choice'])) {
             <p class="outcome"><?= $outcome ?></p>
         </div>
         
-        <button class="reset-btn" onclick="window.location.href=window.location.href">Reset</button>
+        <?php if (!isset($_SESSION['player_name'])): ?>
+            <button class="reset-btn" onclick="window.location.href=window.location.href" style="font-size: 16px;">Play Again</button>
+        <?php else: ?>
+            <button class="reset-btn" onclick="window.location.href=window.location.href">Next</button>
+        <?php endif; ?>
     <?php endif; ?>
     <?php endif; ?>
 </body>
