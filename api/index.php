@@ -7,20 +7,65 @@ if (!file_exists($scores_file)) {
     }
 }
 
+$db_url = getenv("DATABASE_URL");
+$pdo = null;
+if ($db_url) {
+    $dbopts = parse_url($db_url);
+    try {
+        $pdo = new PDO(
+            "pgsql:host={$dbopts["host"]};port={$dbopts["port"]};dbname=".ltrim($dbopts["path"],'/').";sslmode=require",
+            $dbopts["user"],
+            $dbopts["pass"]
+        );
+        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $pdo->exec("CREATE TABLE IF NOT EXISTS player_scores (
+            name VARCHAR(255) PRIMARY KEY,
+            score INT DEFAULT 0
+        )");
+    } catch (PDOException $e) {
+        error_log("Database connection failed: " . $e->getMessage());
+        $pdo = null;
+    }
+}
+
+function get_all_scores($pdo, $scores_file) {
+    if ($pdo) {
+        $stmt = $pdo->query("SELECT name, score FROM player_scores ORDER BY score DESC");
+        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $scores = [];
+        foreach ($results as $row) {
+            $scores[$row['name']] = $row['score'];
+        }
+        return $scores;
+    } else {
+        return json_decode(@file_get_contents($scores_file) ?: '{}', true) ?: [];
+    }
+}
+
+function save_player_score($pdo, $scores_file, $name, $score) {
+    if ($pdo) {
+        $stmt = $pdo->prepare("INSERT INTO player_scores (name, score) VALUES (?, ?) ON CONFLICT (name) DO UPDATE SET score = EXCLUDED.score");
+        $stmt->execute([$name, $score]);
+    } else {
+        $scores = get_all_scores($pdo, $scores_file);
+        $scores[$name] = $score;
+        if (!getenv('VERCEL')) {
+            @file_put_contents($scores_file, json_encode($scores));
+        }
+    }
+}
+
 if (isset($_POST['set_name'])) {
     $name = trim($_POST['player_name']);
     if (!empty($name)) {
         $_SESSION['player_name'] = $name;
-        $_SESSION['player_score'] = 0;
         
-        $scores = json_decode(file_get_contents($scores_file), true);
+        $scores = get_all_scores($pdo, $scores_file);
         if (isset($scores[$name])) {
             $_SESSION['player_score'] = $scores[$name];
         } else {
-            $scores[$name] = 0;
-            if (!getenv('VERCEL')) {
-                @file_put_contents($scores_file, json_encode($scores));
-            }
+            $_SESSION['player_score'] = 0;
+            save_player_score($pdo, $scores_file, $name, 0);
         }
     }
 }
@@ -220,7 +265,7 @@ if (isset($_POST['end_game'])) {
     <div class="leaderboard">
         <h3>Leaderboard</h3>
         <?php
-        $scores = json_decode(file_get_contents($scores_file), true);
+        $scores = get_all_scores($pdo, $scores_file);
         if (empty($scores)) {
             echo "<p>No scores yet.</p>";
         } else {
@@ -329,11 +374,7 @@ if (isset($_POST['end_game'])) {
 
         if ($result_style === 'win' && isset($_SESSION['player_name'])) {
             $_SESSION['player_score']++;
-            $scores = json_decode(file_get_contents($scores_file), true);
-            $scores[$_SESSION['player_name']] = $_SESSION['player_score'];
-            if (!getenv('VERCEL')) {
-                @file_put_contents($scores_file, json_encode($scores));
-            }
+            save_player_score($pdo, $scores_file, $_SESSION['player_name'], $_SESSION['player_score']);
         }
     }
     ?>
