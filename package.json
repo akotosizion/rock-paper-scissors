@@ -3,6 +3,6 @@
   "version": "1.0.0",
   "description": "Rock Paper Scissors game",
   "engines": {
-    "node": "20.x"
+    "node": "18.x"
   }
 }
