@@ -1,0 +1,23 @@
+# PHP
+.env
+.env.local
+.env.*.local
+vendor/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Node (if used)
+node_modules/
+npm-debug.log
+
+# Temporary files
+*.tmp
+*.bak

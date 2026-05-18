@@ -1,0 +1,14 @@
+{
+  "functions": {
+    "api/*.php": {
+      "runtime": "vercel-php@0.6.4"
+    }
+  },
+  "routes": [
+    {
+      "src": "/(.+)",
+      "dest": "/rock_paper_scissor.php"
+    }
+  ],
+  "buildCommand": "npm run build"
+}
