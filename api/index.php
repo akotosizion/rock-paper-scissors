@@ -11,9 +11,10 @@ $db_url = getenv("DATABASE_URL");
 $pdo = null;
 if ($db_url) {
     $dbopts = parse_url($db_url);
+    $port = isset($dbopts["port"]) ? $dbopts["port"] : 5432;
     try {
         $pdo = new PDO(
-            "pgsql:host={$dbopts["host"]};port={$dbopts["port"]};dbname=".ltrim($dbopts["path"],'/').";sslmode=require",
+            "pgsql:host={$dbopts["host"]};port={$port};dbname=".ltrim($dbopts["path"],'/').";sslmode=require",
             $dbopts["user"],
             $dbopts["pass"]
         );
