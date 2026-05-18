@@ -346,6 +346,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['choice'])) {
         .end-btn:hover {
             background-color: #c82333;
         }
+
+        .result-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, 0.85);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            backdrop-filter: blur(5px);
+        }
+        
+        .result-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            animation: popIn 0.3s ease-out forwards;
+        }
+        
+        @keyframes popIn {
+            0% { transform: scale(0.8); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
     </style>
 </head>
 <body>
@@ -402,32 +428,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['choice'])) {
     <?php endif; ?>
 
     <?php if ($result): ?>
-        <div class="result <?php echo $result_style; ?>">
-            <div class="choices">
-                <div>
-                    <p>Player</p>
-                    <img src="/gang_sign/<?= $sa_asul ?>.png" alt="<?= $sa_asul ?>">
+        <div class="result-overlay">
+            <div class="result-content">
+                <div class="result <?php echo $result_style; ?>" style="margin: 0;">
+                    <div class="choices">
+                        <div>
+                            <p>Player</p>
+                            <img src="/gang_sign/<?= $sa_asul ?>.png" alt="<?= $sa_asul ?>">
+                        </div>
+                        <div>
+                            <p>Computer</p>
+                            <img src="/gang_sign/<?= $sa_pula ?>.png" alt="<?= $sa_pula ?>">
+                        </div>
+                    </div>
+                    <h2><?= $result ?></h2>
+                    <p class="outcome"><?= $outcome ?></p>
+                    <?php if ($result_style === 'lose' && $final_name): ?>
+                        <div style="margin-top: 15px; border-top: 2px dashed white; padding-top: 15px; width: 100%;">
+                            <h3 style="color: yellow; margin: 0 0 10px 0;">Game Over, <?= htmlspecialchars($final_name) ?>!</h3>
+                            <p style="margin: 0; font-size: 18px;">Final Score: <strong><?= $final_score ?></strong></p>
+                        </div>
+                    <?php endif; ?>
                 </div>
-                <div>
-                    <p>Computer</p>
-                    <img src="/gang_sign/<?= $sa_pula ?>.png" alt="<?= $sa_pula ?>">
-                </div>
+                
+                <?php if (!isset($_SESSION['player_name'])): ?>
+                    <button class="reset-btn" onclick="window.location.href=window.location.href" style="font-size: 16px;">Play Again</button>
+                <?php else: ?>
+                    <button class="reset-btn" onclick="window.location.href=window.location.href">Next</button>
+                <?php endif; ?>
             </div>
-            <h2><?= $result ?></h2>
-            <p class="outcome"><?= $outcome ?></p>
-            <?php if ($result_style === 'lose' && $final_name): ?>
-                <div style="margin-top: 15px; border-top: 2px dashed white; padding-top: 15px; width: 100%;">
-                    <h3 style="color: yellow; margin: 0 0 10px 0;">Game Over, <?= htmlspecialchars($final_name) ?>!</h3>
-                    <p style="margin: 0; font-size: 18px;">Final Score: <strong><?= $final_score ?></strong></p>
-                </div>
-            <?php endif; ?>
         </div>
-        
-        <?php if (!isset($_SESSION['player_name'])): ?>
-            <button class="reset-btn" onclick="window.location.href=window.location.href" style="font-size: 16px;">Play Again</button>
-        <?php else: ?>
-            <button class="reset-btn" onclick="window.location.href=window.location.href">Next</button>
-        <?php endif; ?>
     <?php endif; ?>
 </body>
 </html>
