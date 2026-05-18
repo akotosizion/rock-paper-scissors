@@ -8,7 +8,12 @@ if (!file_exists($scores_file)) {
 }
 
 $db_url = getenv("DATABASE_URL");
+if (!$db_url) {
+    // Fallback to the URL provided for local testing
+    $db_url = "postgresql://neondb_owner:npg_RiaP2ez3sZGT@ep-billowing-wind-aqft0g7h-pooler.c-8.us-east-1.aws.neon.tech/neondb?sslmode=require";
+}
 $pdo = null;
+$db_error = null;
 if ($db_url) {
     $dbopts = parse_url($db_url);
     $port = isset($dbopts["port"]) ? $dbopts["port"] : 5432;
@@ -24,7 +29,7 @@ if ($db_url) {
             score INT DEFAULT 0
         )");
     } catch (PDOException $e) {
-        error_log("Database connection failed: " . $e->getMessage());
+        $db_error = "Database connection failed: " . $e->getMessage();
         $pdo = null;
     }
 }
@@ -334,6 +339,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['choice'])) {
     </style>
 </head>
 <body>
+    <?php if ($db_error): ?>
+        <div style="background: red; color: white; padding: 10px; margin-bottom: 20px;">
+            <strong>DATABASE ERROR:</strong> <?= htmlspecialchars($db_error) ?><br>
+            <em>(If you see "could not find driver" locally, you need to enable extension=pdo_pgsql in your php.ini file!)</em>
+        </div>
+    <?php endif; ?>
+
     <div class="leaderboard">
         <h3>Leaderboard</h3>
         <?php
