@@ -5,7 +5,13 @@
     }
   },
   "routes": [
-    { "handle": "filesystem" },
-    { "src": "/(.*)", "dest": "/api/index.php" }
+    {
+      "src": "/(gang_sign|background_img|sample_result)/(.*)",
+      "dest": "/$1/$2"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/api/index.php"
+    }
   ]
 }
