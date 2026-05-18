@@ -2,7 +2,9 @@
 session_start();
 $scores_file = __DIR__ . '/../scores.json';
 if (!file_exists($scores_file)) {
-    @file_put_contents($scores_file, json_encode([]));
+    if (!getenv('VERCEL')) {
+        @file_put_contents($scores_file, json_encode([]));
+    }
 }
 
 if (isset($_POST['set_name'])) {
@@ -16,7 +18,9 @@ if (isset($_POST['set_name'])) {
             $_SESSION['player_score'] = $scores[$name];
         } else {
             $scores[$name] = 0;
-            @file_put_contents($scores_file, json_encode($scores));
+            if (!getenv('VERCEL')) {
+                @file_put_contents($scores_file, json_encode($scores));
+            }
         }
     }
 }
@@ -327,7 +331,9 @@ if (isset($_POST['end_game'])) {
             $_SESSION['player_score']++;
             $scores = json_decode(file_get_contents($scores_file), true);
             $scores[$_SESSION['player_name']] = $_SESSION['player_score'];
-            @file_put_contents($scores_file, json_encode($scores));
+            if (!getenv('VERCEL')) {
+                @file_put_contents($scores_file, json_encode($scores));
+            }
         }
     }
     ?>
