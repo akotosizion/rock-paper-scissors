@@ -2,7 +2,7 @@
 session_start();
 $scores_file = __DIR__ . '/../scores.json';
 if (!file_exists($scores_file)) {
-    file_put_contents($scores_file, json_encode([]));
+    @file_put_contents($scores_file, json_encode([]));
 }
 
 if (isset($_POST['set_name'])) {
@@ -16,7 +16,7 @@ if (isset($_POST['set_name'])) {
             $_SESSION['player_score'] = $scores[$name];
         } else {
             $scores[$name] = 0;
-            file_put_contents($scores_file, json_encode($scores));
+            @file_put_contents($scores_file, json_encode($scores));
         }
     }
 }
@@ -244,13 +244,13 @@ if (isset($_POST['end_game'])) {
         <h2>Welcome, <?= htmlspecialchars($_SESSION['player_name']) ?>! Score: <?= $_SESSION['player_score'] ?></h2>
         <form method="POST">
             <button type="submit" name="choice" value="rock">
-                <img src="../gang_sign/rock.png" alt="Rock">
+                <img src="/gang_sign/rock.png" alt="Rock">
             </button>
             <button type="submit" name="choice" value="paper">
-                <img src="../gang_sign/paper.png" alt="Paper">
+                <img src="/gang_sign/paper.png" alt="Paper">
             </button>
             <button type="submit" name="choice" value="scissor">
-                <img src="../gang_sign/scissor.png" alt="Scissors">
+                <img src="/gang_sign/scissor.png" alt="Scissors">
             </button>
         </form>
         <form method="POST">
@@ -327,7 +327,7 @@ if (isset($_POST['end_game'])) {
             $_SESSION['player_score']++;
             $scores = json_decode(file_get_contents($scores_file), true);
             $scores[$_SESSION['player_name']] = $_SESSION['player_score'];
-            file_put_contents($scores_file, json_encode($scores));
+            @file_put_contents($scores_file, json_encode($scores));
         }
     }
     ?>
@@ -337,11 +337,11 @@ if (isset($_POST['end_game'])) {
             <div class="choices">
                 <div>
                     <p>Player</p>
-                    <img src="../gang_sign/<?= $sa_asul ?>.png" alt="<?= $sa_asul ?>">
+                    <img src="/gang_sign/<?= $sa_asul ?>.png" alt="<?= $sa_asul ?>">
                 </div>
                 <div>
                     <p>Computer</p>
-                    <img src="../gang_sign/<?= $sa_pula ?>.png" alt="<?= $sa_pula ?>">
+                    <img src="/gang_sign/<?= $sa_pula ?>.png" alt="<?= $sa_pula ?>">
                 </div>
             </div>
             <h2><?= $result ?></h2>
