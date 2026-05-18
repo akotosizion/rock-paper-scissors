@@ -3,9 +3,6 @@
   "version": "1.0.0",
   "description": "Rock Paper Scissors game",
   "engines": {
-    "node": "18.x"
-  },
-  "scripts": {
-    "build": "echo 'PHP project - no build needed'"
+    "node": "20.x"
   }
 }
