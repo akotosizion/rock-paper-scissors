@@ -17,11 +17,14 @@ $db_error = null;
 if ($db_url) {
     $dbopts = parse_url($db_url);
     $port = isset($dbopts["port"]) ? $dbopts["port"] : 5432;
+    $endpoint = explode('.', $dbopts["host"])[0];
+    // For Neon SNI workaround on older clients, prepend the endpoint to the password
+    $neon_pass = "endpoint={$endpoint};" . $dbopts["pass"];
     try {
         $pdo = new PDO(
             "pgsql:host={$dbopts["host"]};port={$port};dbname=".ltrim($dbopts["path"],'/').";sslmode=require",
             $dbopts["user"],
-            $dbopts["pass"]
+            $neon_pass
         );
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         $pdo->exec("CREATE TABLE IF NOT EXISTS player_scores (
