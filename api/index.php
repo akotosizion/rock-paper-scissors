@@ -177,7 +177,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['choice'])) {
             background-repeat: no-repeat;
             background-position: center;
             background-size: cover;
-            height: 700px;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
             font-family: "Silkscreen", sans-serif;
             text-align: center;
             color: white;
@@ -371,6 +374,42 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['choice'])) {
         @keyframes popIn {
             0% { transform: scale(0.8); opacity: 0; }
             100% { transform: scale(1); opacity: 1; }
+        }
+        
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 32px;
+                padding-top: 0;
+            }
+            .leaderboard {
+                position: relative;
+                top: 0;
+                left: 0;
+                margin: 0 auto 20px auto;
+                width: 90%;
+                max-width: 400px;
+                max-height: 250px;
+            }
+            .result {
+                width: 90%;
+                padding: 20px;
+                box-sizing: border-box;
+            }
+            form button {
+                margin: 0 5px;
+            }
+            form img {
+                width: 70px;
+            }
+            .result img {
+                width: 60px;
+            }
+            .name-form {
+                width: 90%;
+                padding: 30px 20px;
+                box-sizing: border-box;
+            }
         }
     </style>
 </head>
