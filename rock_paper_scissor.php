@@ -246,13 +246,13 @@ if (isset($_POST['end_game'])) {
         <h2>Welcome, <?= htmlspecialchars($_SESSION['player_name']) ?>! Score: <?= $_SESSION['player_score'] ?></h2>
         <form method="POST">
             <button type="submit" name="choice" value="rock">
-                <img src="C:\xampp\htdocs\ROCK_PAPER_SCISSOR\RPS_MIDTERM_EXAM\gang_sign\rock.png" alt="Rock">
+                <img src="./gang_sign/rock.png" alt="Rock">
             </button>
             <button type="submit" name="choice" value="paper">
-                <img src="C:\xampp\htdocs\ROCK_PAPER_SCISSOR\RPS_MIDTERM_EXAM\gang_sign\paper.png" alt="Paper">
+                <img src="./gang_sign/paper.png" alt="Paper">
             </button>
             <button type="submit" name="choice" value="scissor">
-                <img src="C:\xampp\htdocs\ROCK_PAPER_SCISSOR\RPS_MIDTERM_EXAM\gang_sign\scissor.png" alt="Scissors">
+                <img src="./gang_sign/scissor.png" alt="Scissors">
             </button>
         </form>
         <form method="POST">
@@ -339,11 +339,11 @@ if (isset($_POST['end_game'])) {
             <div class="choices">
                 <div>
                     <p>Player</p>
-                    <img src="<?= $sa_asul ?>.png" alt="<?= $sa_asul ?>">
+                    <img src="./gang_sign/<?= $sa_asul ?>.png" alt="<?= $sa_asul ?>">
                 </div>
                 <div>
                     <p>Computer</p>
-                    <img src="<?= $sa_pula ?>.png" alt="<?= $sa_pula ?>">
+                    <img src="./gang_sign/<?= $sa_pula ?>.png" alt="<?= $sa_pula ?>">
                 </div>
             </div>
             <h2><?= $result ?></h2>
